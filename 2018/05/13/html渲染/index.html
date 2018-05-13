@@ -109,7 +109,7 @@
 <meta property="og:site_name">
 <meta property="og:description" content="HTML获取过程： 在浏览器地址栏输入URL 浏览器查看缓存，如果请求资源在缓存中并且新鲜，跳转到转码步骤  i. 如果资源未缓存，发起新请求  ii. 如果已缓存，检验是否足够新鲜，足够新鲜直接提供给客户端，否则与服务器进行验证。  iii. 检验新鲜通常有两个HTTP头进行控制 Expires 和 Cache-Control ： HTTP1.0提供Expires，值为一个绝对时间表示缓存新鲜日">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-13T13:09:22.233Z">
+<meta property="og:updated_time" content="2018-05-13T13:12:44.567Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="html渲染过程">
 <meta name="twitter:description" content="HTML获取过程： 在浏览器地址栏输入URL 浏览器查看缓存，如果请求资源在缓存中并且新鲜，跳转到转码步骤  i. 如果资源未缓存，发起新请求  ii. 如果已缓存，检验是否足够新鲜，足够新鲜直接提供给客户端，否则与服务器进行验证。  iii. 检验新鲜通常有两个HTTP头进行控制 Expires 和 Cache-Control ： HTTP1.0提供Expires，值为一个绝对时间表示缓存新鲜日">
@@ -319,7 +319,7 @@
                 
               
 
-              <time title="创建时间：2018-05-13 20:55:10 / 修改时间：21:09:22" itemprop="dateCreated datePublished" datetime="2018-05-13T20:55:10+08:00">2018-05-13</time>
+              <time title="创建时间：2018-05-13 20:55:10 / 修改时间：21:12:44" itemprop="dateCreated datePublished" datetime="2018-05-13T20:55:10+08:00">2018-05-13</time>
             
 
             
@@ -425,8 +425,8 @@
 <li>浏览器在Document对象上触发DOMContentLoaded事件</li>
 <li>此时文档完全解析完成，浏览器可能还在等待如图片等内容加载，等这些内容完成载入并且所有异步脚本完成载入和执行，document.readState变为complete,window触发load事件<h4 id="ending-显示页面（HTML解析过程中会逐步显示页面）"><a href="#ending-显示页面（HTML解析过程中会逐步显示页面）" class="headerlink" title="ending: 显示页面（HTML解析过程中会逐步显示页面）"></a>ending: 显示页面（HTML解析过程中会逐步显示页面）</h4></li>
 </ol>
-<h2 id="DOM构建与解析顺序"><a href="#DOM构建与解析顺序" class="headerlink" title="DOM构建与解析顺序"></a>DOM构建与解析顺序</h2><p>由于浏览器采用自上而下的方式解析，在遇到这两种元素（script、link）时都会阻塞浏览器的解析，直到外部资源加载并解析或执行完毕后才会继续向下解析html，外部样式不会阻塞后续脚本加载，但会阻塞后续脚本执行，直到外部样式加载并解析完毕。</p>
-<h2 id="load与DOMContentLoaded"><a href="#load与DOMContentLoaded" class="headerlink" title="load与DOMContentLoaded"></a>load与DOMContentLoaded</h2><p>load:当一个资源及其依赖资源已完成加载时，将触发load事件。</p>
+<h2 id="DOM构建与解析顺序："><a href="#DOM构建与解析顺序：" class="headerlink" title="DOM构建与解析顺序："></a>DOM构建与解析顺序：</h2><p>由于浏览器采用自上而下的方式解析，在遇到这两种元素（script、link）时都会阻塞浏览器的解析，直到外部资源加载并解析或执行完毕后才会继续向下解析html，外部样式不会阻塞后续脚本加载，但会阻塞后续脚本执行，直到外部样式加载并解析完毕。</p>
+<h2 id="load与DOMContentLoaded："><a href="#load与DOMContentLoaded：" class="headerlink" title="load与DOMContentLoaded："></a>load与DOMContentLoaded：</h2><p>load:当一个资源及其依赖资源已完成加载时，将触发load事件。</p>
 <p>DOMContentLoaded:HTML解析完毕</p>
 <p>参考资料：</p>
 <p><a href="https://www.cnblogs.com/dojo-lzz/p/3983335.html" target="_blank" rel="noopener">https://www.cnblogs.com/dojo-lzz/p/3983335.html</a></p>
@@ -589,7 +589,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML获取过程："><span class="nav-number">1.</span> <span class="nav-text">HTML获取过程：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML渲染："><span class="nav-number">2.</span> <span class="nav-text">HTML渲染：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DOM构建："><span class="nav-number">2.0.1.</span> <span class="nav-text">DOM构建：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#js解析如下："><span class="nav-number">2.0.2.</span> <span class="nav-text">js解析如下：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ending-显示页面（HTML解析过程中会逐步显示页面）"><span class="nav-number">2.0.3.</span> <span class="nav-text">ending: 显示页面（HTML解析过程中会逐步显示页面）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM构建与解析顺序"><span class="nav-number">3.</span> <span class="nav-text">DOM构建与解析顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#load与DOMContentLoaded"><span class="nav-number">4.</span> <span class="nav-text">load与DOMContentLoaded</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML获取过程："><span class="nav-number">1.</span> <span class="nav-text">HTML获取过程：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML渲染："><span class="nav-number">2.</span> <span class="nav-text">HTML渲染：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DOM构建："><span class="nav-number">2.0.1.</span> <span class="nav-text">DOM构建：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#js解析如下："><span class="nav-number">2.0.2.</span> <span class="nav-text">js解析如下：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ending-显示页面（HTML解析过程中会逐步显示页面）"><span class="nav-number">2.0.3.</span> <span class="nav-text">ending: 显示页面（HTML解析过程中会逐步显示页面）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM构建与解析顺序："><span class="nav-number">3.</span> <span class="nav-text">DOM构建与解析顺序：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#load与DOMContentLoaded："><span class="nav-number">4.</span> <span class="nav-text">load与DOMContentLoaded：</span></a></li></ol></div>
             
 
           </div>

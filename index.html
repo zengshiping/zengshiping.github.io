@@ -320,7 +320,7 @@
                 
               
 
-              <time title="创建时间：2018-05-13 20:55:10 / 修改时间：21:05:49" itemprop="dateCreated datePublished" datetime="2018-05-13T20:55:10+08:00">2018-05-13</time>
+              <time title="创建时间：2018-05-13 20:55:10 / 修改时间：21:09:22" itemprop="dateCreated datePublished" datetime="2018-05-13T20:55:10+08:00">2018-05-13</time>
             
 
             
@@ -426,9 +426,9 @@
 <li>当文档完成解析，document.readState变成interactive</li>
 <li>所有defer脚本会按照在文档出现的顺序执行，延迟脚本能访问完整文档树，禁止使用document.write()</li>
 <li>浏览器在Document对象上触发DOMContentLoaded事件</li>
-<li>此时文档完全解析完成，浏览器可能还在等待如图片等内容加载，等这些内容完成载入并且所有异步脚本完成载入和执行，document.readState变为complete,window触发load事件</li>
+<li>此时文档完全解析完成，浏览器可能还在等待如图片等内容加载，等这些内容完成载入并且所有异步脚本完成载入和执行，document.readState变为complete,window触发load事件<h4 id="ending-显示页面（HTML解析过程中会逐步显示页面）"><a href="#ending-显示页面（HTML解析过程中会逐步显示页面）" class="headerlink" title="ending: 显示页面（HTML解析过程中会逐步显示页面）"></a>ending: 显示页面（HTML解析过程中会逐步显示页面）</h4></li>
 </ol>
-<h4 id="ending-显示页面（HTML解析过程中会逐步显示页面）"><a href="#ending-显示页面（HTML解析过程中会逐步显示页面）" class="headerlink" title="ending: 显示页面（HTML解析过程中会逐步显示页面）"></a>ending: 显示页面（HTML解析过程中会逐步显示页面）</h4><h2 id="DOM构建与解析顺序"><a href="#DOM构建与解析顺序" class="headerlink" title="DOM构建与解析顺序"></a>DOM构建与解析顺序</h2><p>由于浏览器采用自上而下的方式解析，在遇到这两种元素（script、link）时都会阻塞浏览器的解析，直到外部资源加载并解析或执行完毕后才会继续向下解析html，外部样式不会阻塞后续脚本加载，但会阻塞后续脚本执行，直到外部样式加载并解析完毕。</p>
+<h2 id="DOM构建与解析顺序"><a href="#DOM构建与解析顺序" class="headerlink" title="DOM构建与解析顺序"></a>DOM构建与解析顺序</h2><p>由于浏览器采用自上而下的方式解析，在遇到这两种元素（script、link）时都会阻塞浏览器的解析，直到外部资源加载并解析或执行完毕后才会继续向下解析html，外部样式不会阻塞后续脚本加载，但会阻塞后续脚本执行，直到外部样式加载并解析完毕。</p>
 <h2 id="load与DOMContentLoaded"><a href="#load与DOMContentLoaded" class="headerlink" title="load与DOMContentLoaded"></a>load与DOMContentLoaded</h2><p>load:当一个资源及其依赖资源已完成加载时，将触发load事件。</p>
 <p>DOMContentLoaded:HTML解析完毕</p>
 <p>参考资料：</p>

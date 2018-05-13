@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.2.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.2.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="HTML获取过程： 在浏览器地址栏输入URL 浏览器查看缓存，如果请求资源在缓存中并且新鲜，跳转到转码步骤  i. 如果资源未缓存，发起新请求  ii. 如果已缓存，检验是否足够新鲜，足够新鲜直接提供给客户端，否则与服务器进行验证。  iii. 检验新鲜通常有两个HTTP头进行控制 Expires 和 Cache-Control ： HTTP1.0提供Expires，值为一个绝对时间表示缓存新鲜日">
+<meta property="og:type" content="article">
+<meta property="og:title" content="html渲染过程">
+<meta property="og:url" content="http://yoursite.com/2018/05/13/html渲染/index.html">
+<meta property="og:site_name">
+<meta property="og:description" content="HTML获取过程： 在浏览器地址栏输入URL 浏览器查看缓存，如果请求资源在缓存中并且新鲜，跳转到转码步骤  i. 如果资源未缓存，发起新请求  ii. 如果已缓存，检验是否足够新鲜，足够新鲜直接提供给客户端，否则与服务器进行验证。  iii. 检验新鲜通常有两个HTTP头进行控制 Expires 和 Cache-Control ： HTTP1.0提供Expires，值为一个绝对时间表示缓存新鲜日">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-13T12:59:13.402Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="html渲染过程">
+<meta name="twitter:description" content="HTML获取过程： 在浏览器地址栏输入URL 浏览器查看缓存，如果请求资源在缓存中并且新鲜，跳转到转码步骤  i. 如果资源未缓存，发起新请求  ii. 如果已缓存，检验是否足够新鲜，足够新鲜直接提供给客户端，否则与服务器进行验证。  iii. 检验新鲜通常有两个HTTP头进行控制 Expires 和 Cache-Control ： HTTP1.0提供Expires，值为一个绝对时间表示缓存新鲜日">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/13/html渲染/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>html渲染过程 | </title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title"></span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/13/html渲染/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mrzsping">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/avator.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">html渲染过程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-13 20:55:10 / 修改时间：20:59:13" itemprop="dateCreated datePublished" datetime="2018-05-13T20:55:10+08:00">2018-05-13</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="HTML获取过程："><a href="#HTML获取过程：" class="headerlink" title="HTML获取过程："></a>HTML获取过程：</h2><ol>
+<li>在浏览器地址栏输入URL</li>
+<li><p>浏览器查看缓存，如果请求资源在缓存中并且新鲜，跳转到转码步骤</p>
+<p> i. 如果资源未缓存，发起新请求</p>
+<p> ii. 如果已缓存，检验是否足够新鲜，足够新鲜直接提供给客户端，否则与服务器进行验证。</p>
+<p> iii. 检验新鲜通常有两个HTTP头进行控制 Expires 和 Cache-Control ：<br> HTTP1.0提供Expires，值为一个绝对时间表示缓存新鲜日期;HTTP1.1增加了Cache-Control: max-age=,值为以秒为单位的最大新鲜时间</p>
+</li>
+<li><p>浏览器解析URL获取协议，主机，端口，path</p>
+</li>
+<li>浏览器组装一个HTTP（GET）请求报文</li>
+<li><p>浏览器获取主机ip地址，过程如下：<br> i. 浏览器缓存</p>
+<p> ii. 本机缓存</p>
+<p> iii. hosts文件</p>
+<p> iv. 路由器缓存</p>
+<p> v. ISP DNS缓存</p>
+<p> vi. DNS递归查询（可能存在负载均衡导致每次IP不一样）</p>
+</li>
+<li>打开一个socket与目标IP地址，端口建立TCP链接，三次握手如下：</li>
+<li><p> i. 客户端发送一个TCP的SYN=1，Seq=X的包到服务器端口</p>
+<p> ii. 服务器发回SYN=1， ACK=X+1， Seq=Y的响应包</p>
+<p> iii. 客户端发送ACK=Y+1， Seq=Z</p>
+</li>
+<li>TCP链接建立后发送HTTP请求</li>
+<li>服务器接受请求并解析，将请求转发到服务程序，如虚拟主机使用HTTP Host头部判断请求的服务程<br>序</li>
+<li>服务器检查HTTP请求头是否包含缓存验证信息如果验证缓存新鲜，返回304等对应状态码</li>
+<li>处理程序读取完整请求并准备HTTP响应，可能需要查询数据库等操作</li>
+<li>服务器将响应报文通过TCP连接发送回浏览器</li>
+<li><p>浏览器接收HTTP响应，然后根据情况选择关闭TCP连接或者保留重用，关闭TCP连接的四次握手如<br>下：<br>i. 主动方发送Fin=1， Ack=Z， Seq= X报文</p>
+<p>ii. 被动方发送ACK=X+1， Seq=Z报文</p>
+<p>iii. 被动方发送Fin=1， ACK=X， Seq=Y报文</p>
+<p>iv. 主动方发送ACK=Y， Seq=X报文</p>
+</li>
+<li>浏览器检查响应状态吗：是否为1XX，3XX， 4XX， 5XX，这些情况处理与2XX不同</li>
+<li>如果资源可缓存，进行缓存</li>
+<li>对响应进行解码（例如gzip压缩）</li>
+<li>根据资源类型决定如何处理（假设资源为HTML文档）</li>
+</ol>
+<p><em>SYN:TCP/IP建立连接时使用的握手信号</em></p>
+<p><em>ACK:确认字符</em></p>
+<p><em>Seq:seq是序列号</em></p>
+<p><em>Fin:双方的数据传送完成</em></p>
+<h2 id="HTML渲染："><a href="#HTML渲染：" class="headerlink" title="HTML渲染："></a>HTML渲染：</h2><p>解析HTML文档，构件DOM树，下载资源，构造CSSOM树，执行js脚本，这些操作没有严格的先后顺序：</p>
+<h4 id="DOM构建："><a href="#DOM构建：" class="headerlink" title="DOM构建："></a>DOM构建：</h4><ol>
+<li><p>构建DOM树：<br> i. Tokenizing：根据HTML规范将字符流解析为标记</p>
+<p> ii. Lexing：词法分析将标记转换为对象并定义属性和规则</p>
+<p> iii. DOM construction：根据HTML标记关系将对象组成DOM树</p>
+</li>
+<li><p>解析过程中遇到图片、样式表、js文件，启动下载</p>
+</li>
+<li><p>构建CSSOM树：</p>
+<p> i. Tokenizing：字符流转换为标记流</p>
+<p> ii. Node：根据标记创建节点</p>
+<p> iii. CSSOM：节点创建CSSOM树</p>
+</li>
+<li><p>根据DOM树和CSSOM树构建渲染树:<br> i. 从DOM树的根节点遍历所有可见节点，不可见节点包括：1） script , meta 这样本身不可见的标<br> 签。2)被css隐藏的节点，如 display: none</p>
+<p> ii. 对每一个可见节点，找到恰当的CSSOM规则并应用</p>
+<p> iii. 发布可视节点的内容和计算样式</p>
+</li>
+</ol>
+<h4 id="js解析如下："><a href="#js解析如下：" class="headerlink" title="js解析如下："></a>js解析如下：</h4><ol>
+<li>浏览器创建Document对象并解析HTML，将解析到的元素和文本节点添加到文档中，此时document.readystate为loading</li>
+<li>HTML解析器遇到没有async和defer的script时，将他们添加到文档中，然后执行行内或外部脚本。这些脚本会同步执行，并且在脚本下载和执行时解析器会暂停。这样就可以用document.write()把文本插入到输入流中。同步脚本经常简单定义函数和注册事件处理程序，他们可以遍历和操作script和他们之前的文档内容</li>
+<li>当解析器遇到设置了async属性的script时，开始下载脚本并继续解析文档。脚本会在它下载完成<br>后尽快执行，但是解析器不会停下来等它下载。异步脚本禁止使用document.write()，它们可以访问自己script和之前的文档元素</li>
+<li>当文档完成解析，document.readState变成interactive</li>
+<li>所有defer脚本会按照在文档出现的顺序执行，延迟脚本能访问完整文档树，禁止使用document.write()</li>
+<li>浏览器在Document对象上触发DOMContentLoaded事件</li>
+<li>此时文档完全解析完成，浏览器可能还在等待如图片等内容加载，等这些内容完成载入并且所有异步脚本完成载入和执行，document.readState变为complete,window触发load事件</li>
+</ol>
+<h4 id="ending-显示页面（HTML解析过程中会逐步显示页面）"><a href="#ending-显示页面（HTML解析过程中会逐步显示页面）" class="headerlink" title="ending: 显示页面（HTML解析过程中会逐步显示页面）"></a>ending: 显示页面（HTML解析过程中会逐步显示页面）</h4><h2 id="DOM构建与解析顺序"><a href="#DOM构建与解析顺序" class="headerlink" title="DOM构建与解析顺序"></a>DOM构建与解析顺序</h2><p>由于浏览器采用自上而下的方式解析，在遇到这两种元素（script、link）时都会阻塞浏览器的解析，直到外部资源加载并解析或执行完毕后才会继续向下解析html，外部样式不会阻塞后续脚本加载，但会阻塞后续脚本执行，直到外部样式加载并解析完毕。</p>
+<h2 id="load与DOMContentLoaded"><a href="#load与DOMContentLoaded" class="headerlink" title="load与DOMContentLoaded"></a>load与DOMContentLoaded</h2><p>load:当一个资源及其依赖资源已完成加载时，将触发load事件。</p>
+<p>DOMContentLoaded:HTML解析完毕</p>
+<p>参考资料：</p>
+<p><a href="https://www.cnblogs.com/dojo-lzz/p/3983335.html" target="_blank" rel="noopener">https://www.cnblogs.com/dojo-lzz/p/3983335.html</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/</a></p>
+<p><em>前段面试总结pdf</em></p>
+<p><em>汶川十年，愿逝去的人安息，活着的人更加努力的活着</em></p>
+<p><em>mrzsping 2018-5-13</em></p>
+<p>github: <a href="https://github.com/zengshiping/" title="https://github.com/zengshiping" target="_blank" rel="noopener">https://github.com/zengshiping</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/06/mongodb/" rel="next" title="mongodb">
+                <i class="fa fa-chevron-left"></i> mongodb
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/avator.png"
+                alt="Mrzsping" />
+            
+              <p class="site-author-name" itemprop="name">Mrzsping</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML获取过程："><span class="nav-number">1.</span> <span class="nav-text">HTML获取过程：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML渲染："><span class="nav-number">2.</span> <span class="nav-text">HTML渲染：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DOM构建："><span class="nav-number">2.0.1.</span> <span class="nav-text">DOM构建：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#js解析如下："><span class="nav-number">2.0.2.</span> <span class="nav-text">js解析如下：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ending-显示页面（HTML解析过程中会逐步显示页面）"><span class="nav-number">2.0.3.</span> <span class="nav-text">ending: 显示页面（HTML解析过程中会逐步显示页面）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM构建与解析顺序"><span class="nav-number">3.</span> <span class="nav-text">DOM构建与解析顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#load与DOMContentLoaded"><span class="nav-number">4.</span> <span class="nav-text">load与DOMContentLoaded</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mrzsping</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Pisces</a> v6.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.2.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.2.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.2.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.2.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.2.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.2.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.2.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
